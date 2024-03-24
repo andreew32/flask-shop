@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Category{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% for prod in prods %}
+  <div>
+    <a href="{{ url_for('visitor.prod', id1=catid, id2=prod['id']) }}">{{ prod['title'] }}</a>
+  </div>
+  {% endfor %}
+{% endblock %}

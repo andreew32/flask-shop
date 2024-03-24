@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}New merch{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="title">title</label>
+    <input name="title" id="title" value="{{ request.form['title'] }}" required>
+    
+    <select name="category_id" id="category">
+      <option value="None">--</option>
+      {% for category in categories %}
+      <option value="{{ category['id'] }}">{{ category['title'] }}</option>
+      {% endfor %}
+    </select>
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}

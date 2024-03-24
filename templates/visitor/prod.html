@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Product {{ prod['title'] }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <div>
+    {{ prod['content'] }}
+  </div>
+  <div>
+    {% for filename in prod['filenames'] %}
+      <div>
+        <img src="{{ url_for('visitor.download_pic', name=filename) }}" alt="{{ filename }}" width="300" height="300">
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
