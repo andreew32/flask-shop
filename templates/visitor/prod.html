@@ -1,18 +1,44 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Product {{ prod['title'] }}{% endblock %}</h1>
+  <h1 color='cadetBlue'>{% block title %}Product {{ prod['title'] }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  <div>
+  <div color='cadetBlue'>
     {{ prod['content'] }}
   </div>
-  <div>
-    {% for filename in prod['filenames'] %}
-      <div>
-        <img src="{{ url_for('visitor.download_pic', name=filename) }}" alt="{{ filename }}" width="300" height="300">
+  <div class="col-sm-2">
+    <!-- Carousel -->
+    <div id="demo" class="carousel slide" style="text-indent:0px">
+    {# prod['filenames']|lenght -- to obtain length of a list #}
+      <!-- Indicators/dots -->
+      <div class="carousel-indicators" height="30 !important" style="text-indent:0px !important">
+        {% for filename in prod['filenames'] %}
+          <button type="button" data-bs-target="#demo" style='text-indent:0px !important;height:30px !important;color:cadetBlue;background-color:cadetBlue;' data-bs-slide-to="{{ loop.index0 }}" {% if loop.index0 == 0 %} class="active"{% endif %}>
+            <span class="carousel-control-prev-icon" style='text-indent:0px !important;height:30px !important;background-image:url("{{ url_for('static', filename='imgs/triangle.svg') }}");color:cadetBlue;background-color:cadetBlue'>
+              <img width="30" height="30" style='text-indent:0px !important' src="{{ url_for('visitor.download_pic', name=filename) }}" alt="{{ filename }}" style="margin:auto">
+            </span>
+          </button>
+        {% endfor %}
       </div>
-    {% endfor %}
+
+      <!-- The slideshow/carousel -->
+      <div class="carousel-inner">
+        {% for filename in prod['filenames'] %}
+          <div class="carousel-item{% if loop.index0 == 0 %} active{% endif %}">
+            <img src="{{ url_for('visitor.download_pic', name=filename) }}" alt="{{ filename }}" class="d-block" width="200" height="200" style="margin:auto">
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Left and right controls/icons -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" style='background-image:url("{{ url_for('static', filename='imgs/triangle.svg') }}");color:cadetBlue;background-color:cadetBlue'></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+        <span class="carousel-control-next-icon" style='color:cadetBlue;background-color:cadetBlue'></span>
+      </button>
+    </div>
   </div>
 {% endblock %}
