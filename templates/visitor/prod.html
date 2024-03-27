@@ -14,6 +14,7 @@
     {# prod['filenames']|lenght -- to obtain length of a list #}
       <!-- Indicators/dots -->
       <div class="carousel-indicators" height="30 !important" style="text-indent:0px !important">
+        {% if prod['filenames'] %}
         {% for filename in prod['filenames'] %}
           <button type="button" data-bs-target="#demo" style='text-indent:0px !important;height:30px !important;color:cadetBlue;background-color:cadetBlue;' data-bs-slide-to="{{ loop.index0 }}" {% if loop.index0 == 0 %} class="active"{% endif %}>
             <span class="carousel-control-prev-icon" style='text-indent:0px !important;height:30px !important;background-image:url("{{ url_for('static', filename='imgs/triangle.svg') }}");color:cadetBlue;background-color:cadetBlue'>
@@ -21,15 +22,18 @@
             </span>
           </button>
         {% endfor %}
+        {% endif %}
       </div>
 
       <!-- The slideshow/carousel -->
       <div class="carousel-inner">
+        {% if prod['filenames'] %}
         {% for filename in prod['filenames'] %}
           <div class="carousel-item{% if loop.index0 == 0 %} active{% endif %}">
             <img src="{{ url_for('visitor.download_pic', name=filename) }}" alt="{{ filename }}" class="d-block" width="200" height="200" style="margin:auto">
           </div>
         {% endfor %}
+        {% endif %}
       </div>
 
       <!-- Left and right controls/icons -->

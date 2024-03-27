@@ -32,21 +32,23 @@ def category(id):
 
 @bp.route('/category/<int:id1>/prod/<int:id2>', methods=('GET',))
 def prod(id1, id2):
-  cur = get_db().cursor(cursor_factory=psycopg2.extras.DictCursor)
+  cur = get_db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
   error = None
   #cur.execute("SELECT * FROM merch WHERE id = (%s)", (id2,))
-  cur.execute(
-        "SELECT m.title, m.content, p.filename"
-        " FROM merch m JOIN pic p"
-        " ON m.id = p.merch_id AND m.id = (%s)", (id2,)
-  )
-  prod = cur.fetchall()
-  prod = {'title': prod[0]['title'], 
-          'content': prod[0]['content'], 
-          'filenames': list(map(lambda row: row['filename'], prod))
-  }
+  #cur.execute(
+  #      "SELECT m.title, m.content, p.filename"
+  #      " FROM merch m FULL JOIN pic p"
+  #      " ON m.id = p.merch_id AND m.id = (%s)", (id2,)
+  #)
+  cur.execute("SELECT m.title, m.content FROM merch m WHERE m.id = (%s)", (id2,))
+  prod = cur.fetchone()
+  cur = get_db().cursor(cursor_factory=psycopg2.extras.DictCursor)
+  cur.execute("SELECT p.filename FROM pic p WHERE p.merch_id = (%s)", (id2,))
+  filenames = cur.fetchall()
+  prod['filenames'] = list(map(lambda row: row[0], filenames))
   return render_template('/visitor/prod.html', prod=prod)
 
 @bp.route('/uploads/<name>', methods=('GET', 'POST'))
 def download_pic(name):
   return send_from_directory(current_app.config['UPLOAD_FOLDER'], name)
+

@@ -13,12 +13,14 @@
     <div class="autocomplete">
       <input name="title" id="title" value="{{ request.form['title'] }}" required>
     </div>
-    <select name="category_id" id="category">
-      <option value="None">--</option>
-      {% for category in categories %}
-      <option value="{{ category['id'] }}">{{ category['title'] }}</option>
-      {% endfor %}
-    </select>
+    <div>
+      <select name="category_id" id="category">
+        <option value="None">--</option>
+        {% for category in categories %}
+        <option value="{{ category['id'] }}">{{ category['title'] }}</option>
+        {% endfor %}
+      </select>
+    </div>
     <input type="submit" value="Save">
   </form>
   <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
