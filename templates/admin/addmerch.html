@@ -3,12 +3,16 @@
 {% block header %}
   <h1>{% block title %}New merch{% endblock %}</h1>
 {% endblock %}
+{% block links %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/autocomplete.css') }}">
+{% endblock %}
 
 {% block content %}
   <form method="post">
     <label for="title">title</label>
-    <input name="title" id="title" value="{{ request.form['title'] }}" required>
-    
+    <div class="autocomplete">
+      <input name="title" id="title" value="{{ request.form['title'] }}" required>
+    </div>
     <select name="category_id" id="category">
       <option value="None">--</option>
       {% for category in categories %}
@@ -17,4 +21,8 @@
     </select>
     <input type="submit" value="Save">
   </form>
+  <script src="{{ url_for('static', filename='js/autocomplete.js') }}"></script>
+  <script>
+    autocomplete(document.getElementById("title"), countries);
+  </script> 
 {% endblock %}
