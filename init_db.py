@@ -13,7 +13,7 @@ def drop_create_db(conn):
   cur = conn.cursor()
   cur.execute('DROP TABLE IF EXISTS feature;')
   cur.execute('DROP TABLE IF EXISTS category;')
-  cur.execute('DROP TABLE IF EXISTS pics;')
+  cur.execute('DROP TABLE IF EXISTS pic;')
   cur.execute('DROP TABLE IF EXISTS merch;')
   cur.execute('CREATE TABLE merch (id serial PRIMARY KEY,'
                                   'title varchar (150),'
@@ -121,7 +121,30 @@ def fill3_db(database):
         "INSERT INTO pic (merch_id, filename)"
         "VALUES (3, 'you bitch')"
   )
+  cur.execute(
+        "INSERT INTO pic (merch_id, filename)"
+        "VALUES (3, 'Screenshot_from_2023-07-13_23-02-56.png')"
+  )
+  cur.execute(
+        "INSERT INTO pic (merch_id, filename)"
+        "VALUES (3, 'Screenshot_from_2023-07-13_23-04-42.png')"
+  )
   conn.commit()
   cur.close()
   conn.close()
+
+#def fill4_db(database):
+#  conn = connect(database)
+#  cur = conn.cursor()
+#  cur.execute(
+#        "INSERT INTO pic (merch_id, filename)"
+#        "VALUES (3, 'fuck you motherfucker')"
+#  )
+#  cur.execute(
+#        "INSERT INTO pic (merch_id, filename)"
+#        "VALUES (3, 'you bitch')"
+#  )
+#  conn.commit()
+#  cur.close()
+#  conn.close()
 

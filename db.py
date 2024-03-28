@@ -50,6 +50,15 @@ def fill3_db_command():
   init_db.fill3_db("shopa_db")
   click.echo("Filled by 3 the database")
 
+@click.command('fillall-db')
+def fillall_db_command():
+  db = 'shopa_db'
+  init_db.fill_db(db)
+  init_db.fill2_db(db)
+  init_db.fill3_db(db)
+  #init_db.fill4_db(db)
+  click.echo("Filled all the database")
+
 def init_app(app):
   app.teardown_appcontext(close_db)
   app.cli.add_command(init_db_command)
@@ -57,4 +66,4 @@ def init_app(app):
   app.cli.add_command(fill_db_command)
   app.cli.add_command(fill2_db_command)
   app.cli.add_command(fill3_db_command)
-
+  app.cli.add_command(fillall_db_command)
