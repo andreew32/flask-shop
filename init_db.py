@@ -13,14 +13,19 @@ def drop_create_db(conn):
   cur = conn.cursor()
   cur.execute('DROP TABLE IF EXISTS feature;')
   cur.execute('DROP TABLE IF EXISTS category;')
+  cur.execute('DROP TABLE IF EXISTS set;')
   cur.execute('DROP TABLE IF EXISTS pic;')
   cur.execute('DROP TABLE IF EXISTS merch;')
   cur.execute('CREATE TABLE merch (id serial PRIMARY KEY,'
                                   'title varchar (150),'
                                   'content TEXT);'
                                   )
+  cur.execute('CREATE TABLE set (id serial PRIMARY KEY,'
+                                          'title varchar (255));')
   cur.execute('CREATE TABLE category (id serial PRIMARY KEY,'
-                                      'title varchar (255));')
+                                      'title varchar (255),'
+                                      'set_id INTEGER,'
+                                      'FOREIGN KEY (set_id) REFERENCES set (id));')
   cur.execute('CREATE TABLE feature (id serial PRIMARY KEY,'
                                     'merch_id INTEGER,'
                                     'category_id INTEGER,'
@@ -63,13 +68,28 @@ def fill_db(database):
           password="flask"
   )
   cur = conn.cursor()
+  sets = {
+    "food": 1,
+    "beauty": 1,
+    "clothes": 1
+  }
+  for setname in sets:
+    cur.execute("INSERT INTO set (title) VALUES (%s) RETURNING id;", (setname,))
+    sets[setname] = cur.fetchone()
   categories = {
-    "fruits & vegs": 1,
-    "bread": 1,
-    "dairy": 1
+    "fruits & vegs": sets['food'],
+    "bread": sets['food'],
+    "dairy": sets['food'],
+    "for man": sets['clothes'],
+    "for woman": sets['clothes'],
+    "for boys": sets['clothes'],
+    "for girls": sets['clothes'],
+    "body care": sets['beauty'],
+    "face care": sets['beauty'],
+    "shower gels": sets['beauty']
   }
   for catname in categories:
-    cur.execute("INSERT INTO category (title) VALUES (%s) RETURNING id;", (catname,))
+    cur.execute("INSERT INTO category (title, set_id) VALUES (%s, %s) RETURNING id;", (catname, categories[catname]))
     categories[catname] = cur.fetchone()
   merches = {
     "tomus borodin": {'catid': categories["bread"], 'id': 1},
@@ -81,6 +101,13 @@ def fill_db(database):
     "banana": {'catid': categories["fruits & vegs"], 'id': 1},
     "turkey pear": {'catid': categories["fruits & vegs"], 'id': 1},
     "pear at place": {'catid': categories["fruits & vegs"], 'id': 1},
+    "socks for boys": {'catid': categories["for boys"], 'id': 1},
+    "socks for girls": {'catid': categories["for girls"], 'id': 1},
+    "pink gel": {'catid': categories["shower gels"], 'id': 1},
+    "purple gel": {'catid': categories["shower gels"], 'id': 1},
+    "orange gel": {'catid': categories["shower gels"], 'id': 1},
+    "cream": {'catid': categories["body care"], 'id': 1},
+    "cleaning solution": {'catid': categories["face care"], 'id': 1},
   }
   for merchname in merches:
     cur.execute("INSERT INTO merch (title) VALUES (%s) RETURNING id;", (merchname,))
@@ -100,7 +127,9 @@ def fill2_db(database):
           password="flask"
   )
   cur = conn.cursor()
-  cur.execute("INSERT INTO category (title) VALUES ('confectionary') RETURNING id;")
+  cur.execute("SELECT id FROM set WHERE title = ('food')")
+  set = cur.fetchone()
+  cur.execute("INSERT INTO category (title, set_id) VALUES ('confectionary', %s) RETURNING id;", set)
   catid = cur.fetchone()
   for i in range(1,100):
     cur.execute("INSERT INTO merch (title) VALUES (%s) RETURNING id;", ('confectionary'+str(i),))

@@ -48,6 +48,18 @@ def prod(id1, id2):
   prod['filenames'] = list(map(lambda row: row[0], filenames))
   return render_template('/visitor/prod.html', prod=prod)
 
+@bp.route('/set/<int:id>', methods=('GET',))
+def set(id):
+  cur = get_db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+  cur.execute("SELECT merch.id, merch.title FROM category "
+              "JOIN set ON category.set_id = set.id AND category.set_id = (%s) "
+              "JOIN feature ON feature.category_id = category.id "
+              "JOIN merch ON feature.category_id = category.id AND feature.merch_id = merch.id;", 
+              (id,)
+  )
+  prods = cur.fetchall()
+  return render_template('visitor/set.html', prods=prods, setid=id)
+
 @bp.route('/uploads/<name>', methods=('GET', 'POST'))
 def download_pic(name):
   return send_from_directory(current_app.config['UPLOAD_FOLDER'], name)
