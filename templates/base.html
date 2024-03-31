@@ -2,16 +2,28 @@
 <title>{% block title %}{% endblock %} - shopa</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
 {% block links %}{% endblock %}
-<nav>
-</nav>
 <section class="content">
   <header>
     {% block header %}{% endblock %}
   </header>
-  {% for message in get_flashed_messages() %}
+  <div class="row">
+    <div class="col-sm-1">
+      {% for set in sets %}
+      <div>
+       <a href="{{ url_for('visitor.set', id=sets[set]['id']) }}">{{ set }}</a>
+        {% for cat in sets[set]['categories'] %}
+          {% set a = sets[set]['categories'][cat] %}
+          <div>&nbsp&nbsp&nbsp&nbsp<a href="{{ url_for('visitor.category', id=a) }}">{{ cat }}</a></div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+    {% for message in get_flashed_messages() %}
     <div class="flash">{{ message }}</div>
-  {% endfor %}
-  {% block content %}{% endblock %}
-  
+    {% endfor %}
+    <div class="col-lg">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
 </section>
 <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
