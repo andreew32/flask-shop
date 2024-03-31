@@ -80,8 +80,8 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in \
             current_app.config['ALLOWED_EXTENSIONS']
 
-@bp.route('/addpic/category/<int:id1>/prod/<int:id2>', methods=('GET', 'POST'))
-def addpic(id1, id2):
+@bp.route('/addpic/prod/<int:id2>', methods=('GET', 'POST'))
+def addpic(id2):
   if request.method == 'POST':
     # check if the post request has the file part
     if 'file' not in request.files:
