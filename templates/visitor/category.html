@@ -5,9 +5,13 @@
 {% endblock %}
 
 {% block content %}
+  {% set gridprods = prods %}
+  {% include 'view-grid.html' %}
+  {#
   {% for prod in prods %}
   <div>
-    <a href="{{ url_for('visitor.prod', id1=catid, id2=prod['id']) }}">{{ prod['title'] }}</a>
+    <a href="{{ url_for('visitor.prod', id=prod['id']) }}">{{ prod['title'] }}</a>
   </div>
   {% endfor %}
+  #}
 {% endblock %}
