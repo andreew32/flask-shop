@@ -12,42 +12,58 @@ def connect(dbname):
 def drop_create_db(conn):
   cur = conn.cursor()
   cur.execute('DROP TABLE IF EXISTS feature;')
+
   cur.execute('DROP TABLE IF EXISTS category;')
+
   cur.execute('DROP TABLE IF EXISTS set;')
+
   cur.execute('DROP TABLE IF EXISTS pic;')
+
   cur.execute('DROP TABLE IF EXISTS merch;')
+
   cur.execute('CREATE TABLE merch (id serial PRIMARY KEY,'
                                   'title varchar (150),'
                                   'content TEXT);'
                                   )
+
   cur.execute('CREATE TABLE set (id serial PRIMARY KEY,'
                                           'title varchar (255));')
+
   cur.execute('CREATE TABLE category (id serial PRIMARY KEY,'
                                       'title varchar (255),'
                                       'set_id INTEGER,'
                                       'FOREIGN KEY (set_id) REFERENCES set (id));')
+
   cur.execute('CREATE TABLE feature (id serial PRIMARY KEY,'
                                     'merch_id INTEGER,'
                                     'category_id INTEGER,'
                                     'FOREIGN KEY (merch_id) REFERENCES merch (id),'
                                     'FOREIGN KEY (category_id) REFERENCES category (id));'
                                     )
+
   cur.execute('CREATE TABLE pic (id serial PRIMARY KEY,'
                                   'merch_id INTEGER,'
                                   'filename VARCHAR (255),'
                                   'FOREIGN KEY (merch_id) REFERENCES merch (id));')
+
   conn.commit()
+
   cur.close()
 
+
 def init_db():
+
   conn = psycopg2.connect(
           host="localhost",
           database="shopa_db",
           user='flask', #os.environ['DB_USERNAME'],
           password='flask' #os.environ['DB_PASSWORD']
   )
+
   drop_create_db(conn)
+
   conn.close()
+
 
 def init_test_db():
   conn = psycopg2.connect(
@@ -61,6 +77,7 @@ def init_test_db():
   conn.close()
 
 def fill_db(database):
+
   conn = psycopg2.connect(
           host="localhost",
           database=database,
@@ -120,6 +137,7 @@ def fill_db(database):
   conn.close()
 
 def fill2_db(database):
+
   conn = psycopg2.connect(
           host="localhost",
           database=database,
@@ -140,24 +158,14 @@ def fill2_db(database):
   conn.close()
 
 def fill3_db(database):
+
   conn = connect(database)
   cur = conn.cursor()
-  cur.execute(
-        "INSERT INTO pic (merch_id, filename)"
-        "VALUES (3, 'fuck you motherfucker')"
-  )
-  cur.execute(
-        "INSERT INTO pic (merch_id, filename)"
-        "VALUES (3, 'you bitch')"
-  )
-  cur.execute(
-        "INSERT INTO pic (merch_id, filename)"
-        "VALUES (3, 'Screenshot_from_2023-07-13_23-02-56.png')"
-  )
-  cur.execute(
-        "INSERT INTO pic (merch_id, filename)"
-        "VALUES (3, 'Screenshot_from_2023-07-13_23-04-42.png')"
-  )
+  cur.execute("SELECT id FROM merch")
+  mids = cur.fetchall()
+  for mid in mids:
+    cur.execute("INSERT INTO pic (merch_id, filename) VALUES (%s, 'none.jpg')", mid)
+    cur.execute("INSERT INTO pic (merch_id, filename) VALUES (%s, 'none.jpg')", mid)
   conn.commit()
   cur.close()
   conn.close()

@@ -1,34 +1,28 @@
-<div>
-{% for prod in gridprods %}
+<div class="container justify-content-center">
+  <div class="row row-cols-lg-5 row-cols-md-4 row-cols-sm-3 row-cols-2">
+  {% for prod in gridprods %}
   {% set outer_loop = loop %}
-  <div class="col-sm-2">
-    <div id="demo-{{loop.index}}" class="carousel slide">
-      <div class="carousel-indicators">
-      {% if prod['pics'] %}
-      {% for filename in prod['pics'] %}
-        <button type="button" data-bs-target="#demo-{{outer_loop.index}}" data-bs-slide-to="{{loop.index0}}" {{"class=active" if loop.index0 == 0}}>
+    {#<div class="col-lg-2 col-md-3 col-sm-4 col-6">#}
+    <div class="container m-3">
+      <div id="demo-{{loop.index}}" class="carousel slide">
+        <div class="carousel-inner">
+        {% if prod['pics'] %}
+        {% for pic in prod['pics'] %}
+          <div class="carousel-item{{' active' if loop.index0 == 0}}">
+            <img src="{{url_for('visitor.download_pic', name=pic)}}" alt="{{pic}}" class="d-block w-100">
+          </div>
+        {% endfor %}
+        {% endif %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#demo-{{outer_loop.index}}" style='background-color:cadetBlue' data-bs-slide="prev">
           <span class="carousel-control-prev-icon"></span>
         </button>
-      {% endfor %}
-      {% endif %}
+        <button class="carousel-control-next" type="button" data-bs-target="#demo-{{outer_loop.index}}" style='background-color:cadetBlue;' data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
       </div>
-      <div class="carousel-inner">
-      {% if prod['pics'] %}
-      {% for pic in prod['pics'] %}
-        <div class="carousel-item{{' active' if loop.index0 == 0}}">
-          <img src="{{url_for('visitor.download_pic', name=pic)}}" alt="{{pic}}" class="d-block" width="70" height="70" style="margin:auto">
-        </div>
-      {% endfor %}
-      {% endif %}
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#demo-{{outer_loop.index}}" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#demo-{{outer_loop.index}}" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </button>
     </div>
+  {% endfor %}
   </div>
-{% endfor %}
-<div>
+</div>
 
